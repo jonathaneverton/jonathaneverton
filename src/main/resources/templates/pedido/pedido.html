@@ -1,0 +1,149 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: app-head">
+<!-- DataTables -->
+<link rel="stylesheet"
+	href="../../static/LTE/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css"
+	th:href="@{/LTE/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css}" />
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+	<div class="wrapper">
+		<header th:replace="layout/layout :: app-header2"></header>
+		<aside th:replace="layout/layout :: app-side"></aside>
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<section class="content-header">
+				<h1>Pedido</h1>
+				<ol class="breadcrumb">
+					<li><a th:href="@{/}"><i class="fa fa-dashboard"></i> Menu</a></li>
+					<li class="active"><a th:href="@{/pedido/listarPedido/Todos}">Pedido</a></li>
+				</ol>
+			</section>
+
+			<!-- Main content -->
+			<section class="content" style="margin-top: 20px;">
+				<!-- Small boxes (Stat box) -->
+				<div class="row">
+					<div class="col-md-12">
+						<div class="box box-warning">
+							<div class="box-header">
+								<h3 class="box-title">Lista de Pedidos</h3>
+							</div>
+							<div class="alert alert-danger" th:text="${mensagem}" th:if="${not #strings.isEmpty(mensagem)}"></div>
+							<form th:action="@{/pedido/cadastrarPedido}" th:object="${usuario}" method="get" data-parsley-validate="">
+								<div class="box-body">
+									<div class="form-group ad-required" th:classappend="${#fields.hasErrors('idUsuario')} ? has-error">
+										<label for="idUsuario">Cliente:</label>
+										<select id="clienteSelecionado" class="form-control" th:field="*{idUsuario}" data-parsley-required="" data-parsley-error-message="Selecione um Cliente!">
+											<option value="" selected="selected">Selecione o 	Cliente</option>
+											<option th:each="client : ${cboClientes}" th:value="${{client}}" th:text="${client.nome}">Clientes</option>
+										</select>
+									</div>
+									<div class="input-group-btn" th:classappend="${#fields.hasErrors('idUsuario')} ? has-error">
+										<button type="submit" class="btn btn-primary">Solicitar Pedido</button>
+									</div>
+								</div>
+							</form>
+							
+							<div class="box-body">
+								<table id="example1" class="table table-bordered table-hover">
+									<thead>
+										<tr>
+											<th>Cliente</th>
+											<th>Pedido</th>
+											<th>Dt. Pedido</th>
+											<th>Dt. Entrega</th>
+											<th>Hora</th>
+											<th>Descontos</th>
+											<th>Taxa</th>
+											<th>Adiantamento</th>
+											<th>A Pagar</th>
+											<th>Valor Total</th>
+											<th>Ações</th>
+											<th>Status</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="ped: ${pedidos}">
+											<td th:text="${ped.usuario.nome}"></td>
+											<td th:text="${ped.numeroPedido}"></td>
+											<td th:text="${ped.dtPedido}"></td>
+											<td th:text="${ped.dtEntrega}"></td>
+											<td th:text="${ped.hrEntrega}"></td>
+											<td th:text="${ped.valorAuxDesconto}"></td>
+											<td th:text="${ped.valorAuxTaxaEntrega}"></td>
+											<td th:text="${ped.valorAuxAdiantamento}"></td>
+											<td th:text="${ped.valorAuxAPagar}"></td>
+											<td th:text="${ped.valorAuxTotal}"></td>
+
+											<td>
+												<div class="btn-group">
+													<button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+														<span class="caret"></span> <span class="sr-only">Toggle 	Dropdown</span>
+													</button>
+													<ul class="dropdown-menu" role="menu">
+														<li><a th:href="${ '/pedido/visualizarInvoice/' + ped.idPedido }">Visualizar</a></li>
+														<li><a th:href="${ '/pedido/editarPedido/' + ped.idPedido }">Editar</a></li>
+														<li><a th:href="${ '/pedido/statusNovo/' + ped.idPedido }">Tornar Novo</a></li>
+														<li><a th:href="${ '/pedido/entregarPedido/' + ped.idPedido }">Entregue</a></li>
+														<li><a th:href="${ '/pedido/pagarPedido/' + ped.idPedido }">Pago</a></li>
+														<li>	<a class="text-red pull-left" th:href="${ '/pedido/excluirPedido/' + ped.idPedido }">
+																<i class="fa fa-trash-o"></i>Excluir
+															</a>
+														</li>
+														
+														<!-- <i class="fa fa-trash-o"></i><a class="fa fa-trash-o"
+															th:href="${ '/pedido/excluirPedido/' + ped.idPedido }"> Excluir</a></li> -->
+													</ul>
+												</div>
+											</td>
+
+
+											<td><th:block th:if="${ped.status} == 'N'">
+													<span class="label label-primary">Novo</span>
+												</th:block> <th:block th:if="${ped.status} == 'E'">
+													<span class="label label-warning">Entregue</span>
+												</th:block> <th:block th:if="${ped.status} == 'P'">
+													<span class="label label-success">Pago</span>
+												</th:block> <th:block th:if="${ped.status} == 'A'">
+													<span class="label label-danger">Prioridade</span>
+												</th:block>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<!-- /.box-body -->
+						</div>
+					</div>
+				</div>
+				<!-- /.row -->
+			</section>
+			<!-- /.content -->
+		</div>
+		<footer th:replace="layout/layout :: app-footer"></footer>
+		<aside th:replace="layout/layout :: app-side2"></aside>
+		<div th:replace="layout/layout :: app-div"></div>
+	</div>
+	<!-- DataTables -->
+	<script
+		src="../../static/LTE/bower_components/datatables.net/js/jquery.dataTables.min.js"
+		th:src="@{/LTE/bower_components/datatables.net/js/jquery.dataTables.min.js}"></script>
+	<script
+		src="../../static/LTE/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"
+		th:src="@{/LTE/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js}"></script>
+	<script>
+		$(function() {
+			$('#example1').DataTable({
+				'paging' : true,
+				'lengthChange' : true,
+				'searching' : true,
+				'ordering' : true,
+				'info' : true,
+				'autoWidth' : false,
+				'iDisplayLength': 100,
+				'aaSortin': [[4, 'asc']]
+			})
+		})
+	</script>
+</body>
+</html>

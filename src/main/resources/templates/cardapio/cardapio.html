@@ -1,0 +1,102 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: app-head">
+<!-- DataTables -->
+<link rel="stylesheet"
+	href="../../static/LTE/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css"
+	th:href="@{/LTE/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css}" />
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+	<div class="wrapper">
+		<header th:replace="layout/layout :: app-header2"></header>
+		<aside th:replace="layout/layout :: app-side"></aside>
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<section class="content-header">
+				<h1>Cardápio</h1>
+				<ol class="breadcrumb">
+					<li><a th:href="@{/}"><i class="fa fa-dashboard"></i> Menu</a></li>
+					<li class="active"><a th:href="@{/cardapio/listarCardapio}">Cardápio</a></li>
+				</ol>
+			</section>
+
+			<!-- Main content -->
+			<section class="content" style="margin-top: 20px;">
+				<!-- Small boxes (Stat box) -->
+				<div class="row">
+					<div class="col-md-12">
+						<div class="box box-warning">
+							<div class="box-header">
+								<h3 class="box-title">Cardápio</h3>
+								<a th:href="@{'/cardapio/cadastrarItemCardapio'}"
+									class="btn btn-primary" style="margin-left: 86%;">Novo</a>
+							</div>
+
+							<div class="box-body">
+								<table id="example1" class="table table-bordered table-hover">
+									<thead>
+										<tr>
+											<th>Item</th>
+											<th>Categoria</th>
+											<th>Descrição</th>
+											<th>Valor</th>
+											<th></th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="prod: ${cardapioList}">
+											<td th:text="${prod.nomeItemCardapio}"></td>
+											<td th:text="${prod.categoria}"></td>
+											<td th:text="${prod.descricao}"></td>
+											<td th:text="${prod.valorAux}"></td>
+											<td>
+												<a th:href="${ '/cardapio/alterarItemCardapio/' + prod.idItemCardapio }" class="btn btn-warning">Alterar</a>
+											</td>
+											<td>
+												<a th:href="${ '/cardapio/excluir/' + prod.idItemCardapio }" class="btn btn-danger">Apagar</a>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<!-- /.box-body -->
+						</div>
+					</div>
+				</div>
+				<!-- /.row -->
+			</section>
+			<!-- /.content -->
+		</div>
+		<footer th:replace="layout/layout :: app-footer"></footer>
+		<aside th:replace="layout/layout :: app-side2"></aside>
+		<div th:replace="layout/layout :: app-div"></div>
+	</div>
+	<!-- DataTables -->
+	<script
+		src="../../static/LTE/bower_components/datatables.net/js/jquery.dataTables.min.js"
+		th:src="@{/LTE/bower_components/datatables.net/js/jquery.dataTables.min.js}"></script>
+	<script
+		src="../../static/LTE/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"
+		th:src="@{/LTE/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js}"></script>
+	<script>
+		$(function() {
+			$('#example1').DataTable({
+				'paging' : true,
+				'lengthChange' : true,
+				'searching' : true,
+				'ordering' : true,
+				'info' : true,
+				'autoWidth' : true,
+				'iDisplayLength': 100,
+				'aaSortin': [[1, 'asc']]
+			})
+		})
+	</script>
+	<script>
+		jQuery(function($){
+		    $("#valor").maskMoney({prefix:'R$ ', allowNegative: true, thousands:'.', decimal:',', affixesStay: false});
+		})
+	</script>
+	<script src="../../static/plentz-jquery-maskmoney-cdbeeac/dist/jquery.maskMoney.js" th:src="@{/plentz-jquery-maskmoney-cdbeeac/dist/jquery.maskMoney.js}"></script>
+</body>
+</html>

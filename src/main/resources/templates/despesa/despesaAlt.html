@@ -1,0 +1,122 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: app-head">
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+	<div class="wrapper">
+		<header th:replace="layout/layout :: app-header2"></header>
+		<aside th:replace="layout/layout :: app-side"></aside>
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<section class="content-header">
+				<h1>Despesa</h1>
+				<ol class="breadcrumb">
+					<li><a th:href="@{/}"><i class="fa fa-dashboard"></i> Menu</a></li>
+					<li class="active"><a th:href="@{/despesa/listarDespesa}">Despesa</a></li>
+					<li class="active">Alteração</li>
+				</ol>
+			</section>
+
+			<!-- Main content -->
+			<section class="content" style="margin-top: 20px;">
+				<!-- Small boxes (Stat box) -->
+				<div class="row">
+					<div class="col-md-6">
+						<!-- general form elements -->
+						<div class="box box-warning">
+							<div class="box-header with-border">
+								<h3 class="box-title">Alterar Despesa</h3>
+							</div>
+							<!-- /.box-header -->
+							<!-- form start -->
+							<div class="alert alert-danger" th:text="${mensagem}" th:if="${not #strings.isEmpty(mensagem)}"></div>
+							<form th:action="@{/despesa/salvar}" th:object="${despesa}" method="post" data-parsley-validate="">
+								<input type="hidden" th:field="*{idDespesa}" />
+								<div class="box-body">
+
+									<div class="form-group ad-required" th:classappend="${#fields.hasErrors('dtDespesa')} ? has-error">
+										<label class="control-label">Data da Despesa:</label>
+										<div class="input-group date">
+											<div class="input-group-addon">
+												<i class="fa fa-calendar"></i>
+											</div>
+											<input type="date" class="form-control pull-right"
+												th:field="*{dtDespesa}" name="dtDespesa" id="dtDespesa" data-parsley-required=""
+												data-parsley-error-message="Informe a Data de Despesa"/>
+										</div>
+									</div>
+
+									<div class="form-group ad-required" th:classappend="${#fields.hasErrors('nomeDespesa')} ? has-error">
+										<label for="nomeDespesa">Despesa:</label> 
+										<input type="text"
+											class="form-control" id="nomeDespesa"
+											name="nomeDespesa" th:field="*{nomeDespesa}"
+											placeholder="Informe a Despesa" data-parsley-required=""
+											data-parsley-error-message="É obrigatório informar a despesa!" />
+									</div>
+
+									<div class="form-group">
+										<label for="descricao">Descrição:</label>
+										<textarea rows="3" class="form-control" id="descricao"
+											name="descricao" th:field="*{descricao}"
+											placeholder="Descrição da Despesa">
+										</textarea>
+									</div>
+
+									<div class="form-group ad-required" th:classappend="${#fields.hasErrors('categoria')} ? has-error">
+										<label for="categoria">Categoria:</label> 
+										<select
+											class="form-control" th:field="*{categoria}" id="categoria"
+											name="categoria"  data-parsley-required="" data-parsley-error-message="Selecione uma categoria!">
+											<option value="">-- Categorias --</option>
+											<option value="Combustível">Combustível</option>
+											<option value="Funcionário">Funcionário</option>
+											<option value="Impostos">Impostos</option>
+											<option value="Serviços Diversos">Serviços Diversos</option>
+											<option value="Serviço de Entrega">Serviço de Entrega</option>
+											<option value="Supermercado">Supermercado</option>
+											<option value="Taxas">Taxas</option>
+										</select>
+									</div>
+
+									<div class="form-group ad-required" th:classappend="${#fields.hasErrors('valorAux')} ? has-error">
+										<label for="valorAux">Valor:</label> 
+										<input type="text"
+											class="form-control" id="valor" name="valor" placeholder="Valor da Despesa"
+											th:field="*{valorAux}" data-parsley-required="" data-parsley-error-message="Informe o valor!" />
+									</div>
+
+									<div class="pull-right">
+										<button type="submit" class="btn btn-success">Salvar</button>
+									</div>
+
+								</div>
+							</form>
+							<!-- /.form group -->
+						</div>
+					</div>
+				</div>
+				<!-- /.row -->
+			</section>
+			<!-- /.content -->
+		</div>
+		<footer th:replace="layout/layout :: app-footer"></footer>
+		<aside th:replace="layout/layout :: app-side2"></aside>
+		<div th:replace="layout/layout :: app-div"></div>
+	</div>
+	<!-- Page script -->
+	<script>
+		jQuery(function($) {
+			$("#valor").maskMoney({
+				prefix : 'R$ ',
+				allowNegative : true,
+				thousands : '.',
+				decimal : ',',
+				affixesStay : false
+			});
+		})
+	</script>
+	<script
+		src="../../static/plentz-jquery-maskmoney-cdbeeac/dist/jquery.maskMoney.js"
+		th:src="@{/plentz-jquery-maskmoney-cdbeeac/dist/jquery.maskMoney.js}"></script>
+</body>
+</html>
